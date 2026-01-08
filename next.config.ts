@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // For Turbopack compatibility, avoid webpack-specific config
+  transpilePackages: [],
 };
 
 export default nextConfig;
