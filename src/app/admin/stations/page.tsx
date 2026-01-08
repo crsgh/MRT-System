@@ -143,11 +143,10 @@ export default function StationsPage() {
       <div className="card">
         <div className="card-body">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
               placeholder="Search stations by name or code..."
-              className="input-field pl-10 w-full"
+              className="input-field w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
