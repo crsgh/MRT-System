@@ -168,22 +168,20 @@ export default function UsersPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
                   placeholder="Search by username, email, or name..."
-                  className="input-field pl-10 w-full"
+                  className="input-field w-full"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-4">
               <div className="relative flex-1">
-                <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <select
-                  className="input-field pl-8 pr-3"
+                  className="input-field w-full pr-10"
                   value={filterRole}
                   onChange={(e) => setFilterRole(e.target.value as UserRole | 'all')}
                 >

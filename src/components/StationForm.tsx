@@ -175,7 +175,7 @@ export default function StationForm({ initialData, isEditing = false, readOnly =
                     value={formData.name}
                     onChange={handleChange}
                     className={`input-field ${readOnly ? 'bg-gray-50 text-gray-600' : ''}`}
-                    placeholder="e.g. Central Station"
+                    placeholder="GlobalTek Station"
                     required
                     readOnly={readOnly}
                   />
@@ -194,7 +194,7 @@ export default function StationForm({ initialData, isEditing = false, readOnly =
                       value={formData.code}
                       onChange={handleChange}
                       className={`input-field font-mono ${readOnly ? 'bg-gray-50 text-gray-600' : ''}`}
-                      placeholder="MRT_CENTRAL_ABCD"
+                      placeholder="MRT_GLOBALTEK_XXXX"
                       required
                       disabled={isEditing || readOnly}
                     />
@@ -227,7 +227,7 @@ export default function StationForm({ initialData, isEditing = false, readOnly =
                     onChange={handleChange}
                     rows={4}
                     className={`input-field resize-none ${readOnly ? 'bg-gray-50 text-gray-600' : ''}`}
-                    placeholder="Optional description or notes about the station..."
+                    placeholder="Description kung saan malapit"
                     readOnly={readOnly}
                   />
                 </div>
