@@ -274,10 +274,10 @@ export default function StationsPage() {
                       </div>
                       <button
                         onClick={() => setSelectedStation(station)}
-                        className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="flex items-center justify-center w-10 h-10 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                        title="View QR Code"
                       >
-                        <QrCode size={14} />
-                        <span>QR Code</span>
+                        <QrCode size={20} />
                       </button>
                     </div>
                   </div>
@@ -290,7 +290,7 @@ export default function StationsPage() {
 
       {/* QR Code Modal */}
       {selectedStation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full mx-4 overflow-hidden">
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-gray-200">
