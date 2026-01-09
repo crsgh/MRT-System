@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { QrCode, MapPin, Clock, User, CheckCircle, XCircle } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 interface Station {
   _id: string;
@@ -220,14 +221,14 @@ export default function QRTestingPage() {
     }
   };
 
-  const generateQRCode = (passengerCode: string) => {
-    const qrData = JSON.stringify({
+  // For display purposes - creates QR code data that mobile apps can scan
+  // Mobile app will display this QR or scan station QRs for tap in/out
+  const getQRCodeData = (passengerCode: string): string => {
+    return JSON.stringify({
       type: 'mrt_passenger',
-      code: passengerCode,
+      passengerCode: passengerCode,
       timestamp: Date.now()
     });
-    
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
   };
 
   return (
@@ -445,22 +446,23 @@ export default function QRTestingPage() {
         </div>
 
         <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-black mb-4">QR Code Generator</h2>
+          <h2 className="text-lg font-semibold text-black mb-4">QR Code Generator (Mobile Ready)</h2>
           
           {selectedPassengerCode && (
             <div className="text-center">
-              <div className="mb-4">
-                <img
-                  src={generateQRCode(selectedPassengerCode)}
-                  alt="QR Code"
-                  className="mx-auto border border-gray-200 rounded-md"
+              <div className="mb-4 bg-gray-50 p-6 rounded-lg inline-block">
+                <QRCodeCanvas
+                  value={getQRCodeData(selectedPassengerCode)}
+                  size={200}
+                  level="H"
+                  includeMargin={true}
                 />
               </div>
               <p className="text-sm text-gray-600">
                 QR Code for passenger: <strong className="text-black">{selectedPassengerCode}</strong>
               </p>
               <p className="text-xs text-gray-500 mt-2">
-                In a real mobile app, this QR code would be displayed for scanning at stations
+                This QR code can be scanned by station staff or displayed on passenger's mobile phone
               </p>
             </div>
           )}

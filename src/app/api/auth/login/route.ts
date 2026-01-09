@@ -65,11 +65,15 @@ export async function POST(req: Request) {
     );
 
     const response = NextResponse.json(
-      { message: 'Login successful', user: { username: user.username, role: user.role } },
+      { 
+        message: 'Login successful', 
+        token: token,  // Include token in body for mobile clients
+        user: { username: user.username, role: user.role } 
+      },
       { status: 200 }
     );
 
-    // Set cookie
+    // Set cookie for web clients
     response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

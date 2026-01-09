@@ -222,7 +222,7 @@ export default function StationsPage() {
                         </span>
                       </div>
                       <div className="ml-4 bg-gray-50 p-2 rounded-lg flex-shrink-0">
-                        <QRCodeCanvas value={station.code} size={48} level="H" />
+                        <QRCodeCanvas value={station._id} size={48} level="H" />
                       </div>
                     </div>
                     
@@ -313,7 +313,7 @@ export default function StationsPage() {
                 <div className="bg-white border border-gray-200 rounded-xl p-6 inline-block mb-6 shadow-sm">
                   <QRCodeCanvas 
                     id="qr-code-canvas"
-                    value={selectedStation.code} 
+                    value={selectedStation._id} 
                     size={200} 
                     level="H"
                     includeMargin={true}
