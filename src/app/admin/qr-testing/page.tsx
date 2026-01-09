@@ -155,6 +155,8 @@ export default function QRTestingPage() {
       if (res.ok) {
         setMessage(`Discount type updated to ${newDiscountType === 'none' ? 'Regular' : newDiscountType.toUpperCase()}`);
         setMessageType('success');
+        // Refresh passenger info to reflect the updated discount type
+        lookupPassenger(selectedPassengerCode);
       } else {
         setSelectedDiscountType(prev);
         const text = await res.text().catch(() => 'Failed to update discount type');

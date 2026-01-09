@@ -205,7 +205,8 @@ export async function GET(request: NextRequest) {
           id: passenger._id,
           username: passenger.username,
           firstName: passenger.firstName,
-          lastName: passenger.lastName
+          lastName: passenger.lastName,
+          discountType: passenger.discountType || 'none'
         },
         activeTrip: activeTrip ? {
           id: activeTrip._id,
