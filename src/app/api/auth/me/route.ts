@@ -7,7 +7,9 @@ export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
-    const user = getUserFromRequest(request);
+    const user = await getUserFromRequest(request);
+    console.log('API /me: user from token:', user);
+
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -15,11 +17,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    console.log('API /me: connecting to DB...');
     await dbConnect();
+    console.log('API /me: connected to DB');
 
     const userData = await User.findById(user.userId)
       .select('-password')
       .lean();
+    
+    console.log('API /me: userData found:', !!userData);
 
     if (!userData) {
       return NextResponse.json(
@@ -40,10 +46,10 @@ export async function GET(request: NextRequest) {
         createdAt: userData.createdAt,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching user info:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: error.message || 'Internal server error' },
       { status: 500 }
     );
   }
