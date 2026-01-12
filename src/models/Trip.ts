@@ -47,4 +47,7 @@ tripSchema.index({ passengerCode: 1 });
 tripSchema.index({ status: 1 });
 tripSchema.index({ tapInTime: 1 });
 
+// Ensure a passenger can only have one active trip at a time
+tripSchema.index({ passengerId: 1 }, { unique: true, partialFilterExpression: { status: 'active' } });
+
 export default mongoose.models?.Trip || mongoose.model('Trip', tripSchema);

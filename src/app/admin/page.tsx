@@ -25,56 +25,57 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchCurrentUser();
-    fetchDashboardStats();
-  }, []);
+    const fetchData = async () => {
+      let isAuthenticated = false;
+      try {
+        // 1. Fetch User
+        const userRes = await fetch('/api/auth/me');
+        if (!userRes.ok) {
+          router.push('/login');
+          return;
+        }
+        isAuthenticated = true;
+        const userData = await userRes.json();
+        setUser(userData.user);
 
-  const fetchCurrentUser = async () => {
-    try {
-      const res = await fetch('/api/auth/me');
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user);
-      } else {
-        router.push('/login');
+        // 2. Fetch Stats (only if authenticated)
+        const [stationsRes, tripsRes, usersRes] = await Promise.all([
+          fetch('/api/stations'),
+          fetch('/api/trips'),
+          fetch('/api/passengers')
+        ]);
+
+        const stationsData = stationsRes.ok ? await stationsRes.json() : { stations: [] };
+        const tripsData = tripsRes.ok ? await tripsRes.json() : { trips: [] };
+        const usersData = usersRes.ok ? await usersRes.json() : { passengers: [] };
+
+        // Calculate today's trips
+        const today = new Date().toDateString();
+        const todayTrips = tripsData.trips.filter((trip: any) => {
+          const tripDate = new Date(trip.createdAt || trip.tapInTime).toDateString();
+          return tripDate === today;
+        });
+
+        setStats({
+          totalStations: stationsData.stations.length,
+          activeUsers: usersData.passengers.length,
+          todayTrips: todayTrips.length,
+          recentTrips: tripsData.trips.slice(0, 5) // Get latest 5 trips
+        });
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        setLoading(false);
+      } finally {
+        // Only stop loading if we are authenticated to avoid flash of access denied during redirect
+        if (isAuthenticated) {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      router.push('/login');
-    }
-  };
+    };
 
-  const fetchDashboardStats = async () => {
-    try {
-      const [stationsRes, tripsRes, usersRes] = await Promise.all([
-        fetch('/api/stations'),
-        fetch('/api/trips'),
-        fetch('/api/passengers')
-      ]);
-
-      const stationsData = stationsRes.ok ? await stationsRes.json() : { stations: [] };
-      const tripsData = tripsRes.ok ? await tripsRes.json() : { trips: [] };
-      const usersData = usersRes.ok ? await usersRes.json() : { passengers: [] };
-
-      // Calculate today's trips
-      const today = new Date().toDateString();
-      const todayTrips = tripsData.trips.filter((trip: any) => {
-        const tripDate = new Date(trip.createdAt || trip.tapInTime).toDateString();
-        return tripDate === today;
-      });
-
-      setStats({
-        totalStations: stationsData.stations.length,
-        activeUsers: usersData.passengers.length,
-        todayTrips: todayTrips.length,
-        recentTrips: tripsData.trips.slice(0, 5) // Get latest 5 trips
-      });
-    } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchData();
+  }, [router]);
 
   if (loading) {
     return (

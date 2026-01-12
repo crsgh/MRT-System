@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     // Check if user exists
     const user = await User.findOne({ username });
     if (!user) {
+      console.log('Login failed: User not found for username:', username);
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -32,17 +33,10 @@ export async function POST(req: Request) {
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Login failed: Password mismatch for user:', username);
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
-      );
-    }
-
-    // Check if user has admin access (passengers use mobile app)
-    if (user.role !== 'admin' && user.role !== 'super_admin') {
-      return NextResponse.json(
-        { error: 'Administrative access required. Passengers should use the mobile app.' },
-        { status: 403 }
       );
     }
 
@@ -85,8 +79,12 @@ export async function POST(req: Request) {
     return response;
   } catch (error) {
     console.error('Login error:', error);
+    const errorMessage = process.env.NODE_ENV === 'development' 
+      ? (error instanceof Error ? error.message : String(error))
+      : 'Internal server error';
+      
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -42,7 +42,8 @@ export async function GET(request: NextRequest) {
       role: 1,
       discountType: 1,
       isActive: 1,
-      createdAt: 1
+      createdAt: 1,
+      balance: 1
     });
 
     if (!passenger) {
@@ -63,7 +64,8 @@ export async function GET(request: NextRequest) {
         role: passenger.role,
         discountType: passenger.discountType,
         isActive: passenger.isActive,
-        joinedDate: passenger.createdAt
+        joinedDate: passenger.createdAt,
+        balance: passenger.balance || 0
       }
     });
   } catch (error) {

@@ -34,11 +34,7 @@ async function dbConnect() {
   }
 
   if (cached.conn) {
-    if (cached.conn.connection.readyState === 1) {
-      return cached.conn;
-    }
-    console.log('DB connection not ready, reconnecting...');
-    cached.promise = null;
+    return cached.conn;
   }
 
   if (!cached.promise) {

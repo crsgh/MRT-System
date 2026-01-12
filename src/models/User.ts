@@ -65,6 +65,11 @@ const UserSchema = new Schema({
   lastLogin: {
     type: Date,
   },
+  balance: {
+    type: Number,
+    default: 100, // Default balance for new users
+    min: 0
+  }
 }, { timestamps: true });
 
 // Index for faster queries

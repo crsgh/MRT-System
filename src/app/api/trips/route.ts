@@ -45,13 +45,25 @@ async function calculateDistanceFare(startStationId: string, endStationId: strin
   }
 }
 
+import { verifyToken } from '@/lib/auth';
+
 export async function POST(request: NextRequest) {
   try {
-    const adminUser = getUserFromRequest(request);
-    if (!adminUser || !canManageUsers(adminUser.role)) {
-      return NextResponse.json(
-        { error: 'Insufficient permissions' },
-        { status: 403 }
+    // 1. Get user from Cookie OR Header
+    let requestUser = getUserFromRequest(request);
+    
+    if (!requestUser) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        requestUser = verifyToken(token);
+      }
+    }
+
+    if (!requestUser) {
+       return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
       );
     }
 
@@ -61,6 +73,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Missing required fields: action, passengerCode, stationId' },
         { status: 400 }
+      );
+    }
+
+    // 2. Check Permissions (Admin OR Self)
+    const isAdmin = canManageUsers(requestUser.role);
+    const isSelf = requestUser.username === passengerCode;
+
+    if (!isAdmin && !isSelf) {
+      return NextResponse.json(
+        { error: 'Insufficient permissions' },
+        { status: 403 }
       );
     }
 
@@ -95,6 +118,18 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // Check for minimum balance (e.g., max fare which is 24)
+      // Initialize balance if undefined
+      const currentBalance = passenger.balance !== undefined ? passenger.balance : 0;
+      const MINIMUM_BALANCE = 13; // Minimum fare
+
+      if (currentBalance < MINIMUM_BALANCE) {
+          return NextResponse.json(
+              { error: `Insufficient balance. Minimum ₱${MINIMUM_BALANCE} required. Current: ₱${currentBalance}` },
+              { status: 400 }
+          );
+      }
+
       const newTrip = new Trip({
         passengerId: passenger._id,
         passengerCode,
@@ -112,7 +147,8 @@ export async function POST(request: NextRequest) {
           passengerCode,
           startStation: station.name,
           tapInTime: newTrip.tapInTime,
-          status: newTrip.status
+          status: newTrip.status,
+          balance: currentBalance
         }
       });
 
@@ -138,7 +174,21 @@ export async function POST(request: NextRequest) {
       const fare = await calculateDistanceFare(startStationId, stationId, passenger.discountType || 'none');
       activeTrip.fare = fare;
 
-      await activeTrip.save();
+      // Deduct fare from balance
+      // Initialize balance if undefined
+      if (passenger.balance === undefined) passenger.balance = 0;
+      
+      passenger.balance -= fare;
+      
+      // Explicitly mark balance as modified because Mongoose might not detect it if it was undefined
+      passenger.markModified('balance');
+      
+      // Save both trip and user
+      // Ideally this should be a transaction, but for now separate saves are okay for MVP
+      await Promise.all([
+          activeTrip.save(),
+          passenger.save()
+      ]);
 
       return NextResponse.json({
         success: true,
@@ -152,7 +202,8 @@ export async function POST(request: NextRequest) {
           tapOutTime: activeTrip.tapOutTime,
           travelTime: `${Math.floor((activeTrip.tapOutTime.getTime() - activeTrip.tapInTime.getTime()) / (1000 * 60))} minutes`,
           fare: `₱${activeTrip.fare.toFixed(0)}`,
-          status: activeTrip.status
+          status: activeTrip.status,
+          remainingBalance: passenger.balance
         }
       });
     } else {
