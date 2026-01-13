@@ -32,7 +32,12 @@ export interface CreateSourceResponse {
   };
 }
 
-export const createSource = async (amount: number, type: 'gcash' | 'grab_pay' | 'bpi' | 'ubp_online' = 'gcash', redirect: { success: string; failed: string }): Promise<CreateSourceResponse> => {
+export const createSource = async (
+  amount: number,
+  type: 'gcash' | 'grab_pay' | 'paymaya' | 'maya' | 'bpi' | 'ubp_online' = 'gcash',
+  redirect: { success: string; failed: string }
+): Promise<CreateSourceResponse> => {
+  const normalizedType = type === 'maya' ? 'paymaya' : type;
   const response = await fetch(`${BASE_URL}/sources`, {
     method: 'POST',
     headers: getHeaders(),
@@ -44,7 +49,7 @@ export const createSource = async (amount: number, type: 'gcash' | 'grab_pay' | 
             success: redirect.success,
             failed: redirect.failed,
           },
-          type: type,
+          type: normalizedType,
           currency: 'PHP',
         },
       },

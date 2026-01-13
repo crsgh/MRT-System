@@ -3,6 +3,7 @@ import { getUserFromRequest, verifyToken } from '@/lib/auth';
 import { retrieveSource, createPayment } from '@/lib/paymongo';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import WalletTransaction from '@/models/WalletTransaction';
 
 export const runtime = 'nodejs';
 
@@ -52,12 +53,25 @@ export async function POST(request: NextRequest) {
             const user = await User.findById(requestUser.userId);
             
             if (!user) {
-                return NextResponse.json({ error: 'User not found' }, { status: 404 });
+              return NextResponse.json({ error: 'User not found' }, { status: 404 });
             }
 
             if (user.balance === undefined) user.balance = 0;
             user.balance += amount;
             await user.save();
+
+            await WalletTransaction.findOneAndUpdate(
+              { paymentId: payment.data.id },
+              {
+                userId: user._id,
+                amount,
+                method: sourceData.attributes.type || 'unknown',
+                status: paymentStatus,
+                paymentId: payment.data.id,
+                sourceId,
+              },
+              { upsert: true, new: true, setDefaultsOnInsert: true }
+            );
 
             return NextResponse.json({
                 success: true,
@@ -82,12 +96,24 @@ export async function POST(request: NextRequest) {
             });
         }
     } else if (sourceData.attributes.status === 'consumed') {
-        // Source was already consumed - check if payment was made
-        return NextResponse.json({
-            success: true,
-            message: 'Payment already processed',
-            status: 'consumed'
-        });
+      await dbConnect();
+      await WalletTransaction.findOneAndUpdate(
+        { sourceId },
+        {
+          userId: requestUser.userId,
+          amount: sourceData.attributes.amount / 100,
+          method: sourceData.attributes.type || 'unknown',
+          status: 'paid',
+          sourceId,
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+
+      return NextResponse.json({
+        success: true,
+        message: 'Payment already processed',
+        status: 'consumed'
+      });
     } else if (sourceData.attributes.status === 'expired' || sourceData.attributes.status === 'failed') {
         // Payment method expired or failed
         return NextResponse.json({

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import WalletTransaction from '@/models/WalletTransaction';
 import { getUserFromRequest, verifyToken } from '@/lib/auth';
 
 export const runtime = 'nodejs';
@@ -66,8 +67,16 @@ export async function POST(request: NextRequest) {
         user.balance = 0;
     }
 
-    user.balance += Number(amount);
+    const numericAmount = Number(amount);
+    user.balance += numericAmount;
     await user.save();
+
+    await WalletTransaction.create({
+      userId: user._id,
+      amount: numericAmount,
+      method: 'manual',
+      status: 'paid'
+    });
 
     return NextResponse.json({
       success: true,
