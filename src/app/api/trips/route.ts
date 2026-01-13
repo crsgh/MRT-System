@@ -118,14 +118,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Check for minimum balance (e.g., max fare which is 24)
       // Initialize balance if undefined
       const currentBalance = passenger.balance !== undefined ? passenger.balance : 0;
-      const MINIMUM_BALANCE = 13; // Minimum fare
 
-      if (currentBalance < MINIMUM_BALANCE) {
+      // Debt Feature: Allow entry as long as balance is not negative
+      if (currentBalance < 0) {
           return NextResponse.json(
-              { error: `Insufficient balance. Minimum ₱${MINIMUM_BALANCE} required. Current: ₱${currentBalance}` },
+              { error: `Insufficient balance. You have outstanding debt of ₱${Math.abs(currentBalance)}. Please top up.` },
               { status: 400 }
           );
       }

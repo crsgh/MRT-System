@@ -68,8 +68,7 @@ const UserSchema = new Schema({
   },
   balance: {
     type: Number,
-    default: 100, // Default balance for new users
-    min: 0
+    default: 0, // Default balance for new users
   },
   profilePicture: {
     type: String
