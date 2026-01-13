@@ -44,8 +44,9 @@ export async function POST(request: NextRequest) {
         // 4. Create Payment (Charge)
         const amount = sourceData.attributes.amount / 100; // Convert cents back to main unit
         const payment = await createPayment(amount, sourceId, `Top-up for ${requestUser.username}`);
+        const paymentStatus = payment.data.attributes.status;
         
-        if (payment.data.attributes.status === 'paid') {
+        if (paymentStatus === 'paid') {
             // 5. Update User Balance
             await dbConnect();
             const user = await User.findById(requestUser.userId);
@@ -62,26 +63,43 @@ export async function POST(request: NextRequest) {
                 success: true,
                 message: 'Payment successful',
                 balance: user.balance,
-                status: 'paid'
+                status: 'paid',
+                paymentId: payment.data.id
+            });
+        } else if (paymentStatus === 'pending') {
+            // Payment is still pending - return pending status
+            return NextResponse.json({
+                success: false,
+                message: 'Payment is still pending',
+                status: 'pending'
             });
         } else {
-             return NextResponse.json({
+            // Payment failed
+            return NextResponse.json({
                 success: false,
-                message: 'Payment failed',
-                status: payment.data.attributes.status
+                message: `Payment failed with status: ${paymentStatus}`,
+                status: paymentStatus
             });
         }
-    } else if (sourceData.attributes.status === 'consumed' || sourceData.attributes.status === 'paid') {
-         return NextResponse.json({
-            success: false, // Already processed, but effectively "success" for the user history maybe?
-            // For now, treat as "nothing to do"
+    } else if (sourceData.attributes.status === 'consumed') {
+        // Source was already consumed - check if payment was made
+        return NextResponse.json({
+            success: true,
             message: 'Payment already processed',
+            status: 'consumed'
+        });
+    } else if (sourceData.attributes.status === 'expired' || sourceData.attributes.status === 'failed') {
+        // Payment method expired or failed
+        return NextResponse.json({
+            success: false,
+            message: `Source status is ${sourceData.attributes.status}`,
             status: sourceData.attributes.status
         });
     } else {
-         return NextResponse.json({
+        // Pending status - not yet chargeable
+        return NextResponse.json({
             success: false,
-            message: `Source status is ${sourceData.attributes.status}`,
+            message: `Source status is ${sourceData.attributes.status}. Please complete authorization.`,
             status: sourceData.attributes.status
         });
     }
