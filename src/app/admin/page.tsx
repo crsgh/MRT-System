@@ -266,25 +266,7 @@ export default function AdminDashboard() {
                 </div>
               </a>
 
-              <a
-                href="/admin/qr-testing"
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-blue-100 text-blue-700 rounded-lg group-hover:bg-blue-200 transition-colors">
-                    <TrendingUp size={16} />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900">QR Testing</h4>
-                    <p className="text-sm text-gray-600">Test passenger tap in/out system</p>
-                  </div>
-                </div>
-                <div className="text-gray-400 group-hover:text-gray-600 transition-colors">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </a>
+
             </div>
           </div>
         </div>
@@ -331,14 +313,6 @@ export default function AdminDashboard() {
                   </span>
                 </div>
               ))}
-              <div className="text-center pt-4">
-                <a 
-                  href="/admin/qr-testing" 
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  View all trips →
-                </a>
-              </div>
             </div>
           )}
         </div>

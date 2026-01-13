@@ -73,12 +73,13 @@ export default function AdminLayout({
       href: '/admin/qr-testing', 
       label: 'QR Testing', 
       icon: QrCode,
-      roles: [UserRole.ADMIN, UserRole.SUPER_ADMIN]
+      roles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
+      hidden: true  // Hidden - QR testing available in mobile app
     },
   ];
 
   const visibleNavItems = navItems.filter(item => 
-    userInfo && item.roles.includes(userInfo.role)
+    !item.hidden && userInfo && item.roles.includes(userInfo.role)
   );
 
   const formatRole = (role: UserRole) => {

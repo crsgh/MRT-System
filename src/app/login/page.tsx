@@ -43,9 +43,7 @@ export default function LoginPage() {
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex justify-center">
-            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">M</span>
-            </div>
+            <img src="/globaltek-logo.png" alt="Globaltek Logo" className="h-30 w-auto" />
           </div>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-black">
             Sign in to MRT Admin
