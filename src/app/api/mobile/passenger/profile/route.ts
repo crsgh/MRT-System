@@ -41,9 +41,16 @@ export async function GET(request: NextRequest) {
       email: 1,
       role: 1,
       discountType: 1,
+      profilePicture: 1,
       isActive: 1,
       createdAt: 1,
       balance: 1
+    });
+
+    console.log('Fetched passenger profile:', {
+      userId: decoded.userId,
+      hasPicture: !!passenger?.profilePicture,
+      pictureLength: passenger?.profilePicture?.length || 0
     });
 
     if (!passenger) {
@@ -63,6 +70,7 @@ export async function GET(request: NextRequest) {
         email: passenger.email,
         role: passenger.role,
         discountType: passenger.discountType,
+        profilePicture: passenger.profilePicture,
         isActive: passenger.isActive,
         joinedDate: passenger.createdAt,
         balance: passenger.balance || 0
@@ -137,6 +145,7 @@ export async function PUT(request: NextRequest) {
         email: passenger.email,
         role: passenger.role,
         discountType: passenger.discountType,
+        profilePicture: passenger.profilePicture,
         isActive: passenger.isActive,
         joinedDate: passenger.createdAt,
         balance: passenger.balance || 0

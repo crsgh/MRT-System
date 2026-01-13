@@ -10,6 +10,7 @@ export interface IUser {
   password: string;
   role: UserRole;
   discountType?: 'none' | 'senior' | 'pwd' | 'student';
+  profilePicture?: string;
   isActive: boolean;
   lastLogin?: Date;
   createdAt: Date;
@@ -69,6 +70,9 @@ const UserSchema = new Schema({
     type: Number,
     default: 100, // Default balance for new users
     min: 0
+  },
+  profilePicture: {
+    type: String
   }
 }, { timestamps: true });
 
