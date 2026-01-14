@@ -46,10 +46,12 @@ export async function GET(request: NextRequest) {
       trips: trips.map(trip => ({
         id: trip._id,
         startStation: {
+          id: trip.startStation?._id,
           name: trip.startStation?.name,
           code: trip.startStation?.code
         },
         endStation: trip.endStation ? {
+          id: trip.endStation._id,
           name: trip.endStation.name,
           code: trip.endStation.code
         } : null,
