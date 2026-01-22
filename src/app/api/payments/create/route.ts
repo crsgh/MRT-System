@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // 3. Create Source
     // We'll use a generic success/failed URL for now.
     // In a real app, this should be a deep link or a page that handles the post-payment logic.
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://172.20.10.3:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://172.20.10.2:3000';
     
     const result = await createSource(amount, type || 'gcash', {
       success: `${baseUrl}/payment/success`,
