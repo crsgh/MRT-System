@@ -97,6 +97,14 @@ export async function POST(request: NextRequest) {
         }
     } else if (sourceData.attributes.status === 'consumed') {
       await dbConnect();
+      const user = await User.findById(requestUser.userId);
+      
+      if (!user) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      }
+
+      if (user.balance === undefined) user.balance = 0;
+
       await WalletTransaction.findOneAndUpdate(
         { sourceId },
         {
@@ -112,7 +120,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: 'Payment already processed',
-        status: 'consumed'
+        balance: user.balance,
+        status: 'consumed',
+        paymentId: sourceData.attributes.source_id
       });
     } else if (sourceData.attributes.status === 'expired' || sourceData.attributes.status === 'failed') {
         // Payment method expired or failed
