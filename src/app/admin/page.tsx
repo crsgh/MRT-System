@@ -140,7 +140,7 @@ export default function AdminDashboard() {
       {/* Simple Header */}
       <div className="flex items-center justify-between rounded-lg p-4 bg-white">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
           <p className="text-sm text-gray-500">Overview & quick actions</p>
         </div>
         <div className="text-sm text-gray-600">{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</div>
