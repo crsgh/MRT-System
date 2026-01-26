@@ -41,7 +41,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 flex flex-col justify-center py-8 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex justify-center">
             <img src="/globaltek-logo.png" alt="Globaltek Logo" className="h-30 w-auto" />
@@ -54,9 +54,9 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-8 w-full sm:mx-auto sm:w-full sm:max-w-md px-4">
           {error && (
-            <div className="mb-4 p-3 text-sm text-black bg-gray-100 border border-gray-300 rounded-md">
+            <div className="mb-4 p-3 text-sm sm:text-base text-black bg-gray-100 border border-gray-300 rounded-md">
               {error}
             </div>
           )}
@@ -75,7 +75,7 @@ export default function LoginPage() {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full rounded-md border-0 py-2.5 px-3 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-2.5 px-3 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black text-sm sm:text-base sm:leading-6"
                   placeholder="Enter username"
                 />
               </div>
@@ -94,7 +94,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-0 py-2.5 px-3 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-2.5 px-3 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black text-sm sm:text-base sm:leading-6"
                   placeholder="Enter password"
                 />
               </div>
