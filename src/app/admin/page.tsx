@@ -137,17 +137,13 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-black to-gray-800 rounded-xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">
-          Welcome back, {user.firstName} {user.lastName}
-        </h1>
-        <p className="text-gray-200">
-          {user.role === 'super_admin' 
-            ? 'You have full administrative access to the MRT system.' 
-            : 'You have administrative access to view system information.'
-          }
-        </p>
+      {/* Simple Header */}
+      <div className="flex items-center justify-between rounded-lg p-4 bg-white">
+        <div>
+          <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+          <p className="text-sm text-gray-500">Overview & quick actions</p>
+        </div>
+        <div className="text-sm text-gray-600">{user.role === 'super_admin' ? 'Super Admin' : 'Admin'}</div>
       </div>
       
       {/* Statistics Cards */}
