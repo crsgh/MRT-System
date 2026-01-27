@@ -131,7 +131,9 @@ export default function AdminLayout({
           {/* Header */}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-gray-900">MRT System</h1>
+              <div className="flex-1 flex justify-center">
+                <img src="/globaltek-logo.png" alt="GlobalTek Logo" className="h-25 object-contain" />
+              </div>
               <button
                 onClick={() => setSidebarOpen(false)}
                 className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
@@ -140,7 +142,7 @@ export default function AdminLayout({
               </button>
             </div>
             {userInfo && (
-              <div className="mt-4">
+              <div className="mt-4 flex justify-center">
                 <div className={`inline-block px-4 py-2 rounded-lg font-medium text-sm ${getRoleColor(userInfo.role)} cursor-default`}>
                   {formatRole(userInfo.role)}
                 </div>
