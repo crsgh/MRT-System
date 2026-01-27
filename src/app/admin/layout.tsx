@@ -89,13 +89,26 @@ export default function AdminLayout({
   const getRoleColor = (role: UserRole) => {
     switch (role) {
       case UserRole.SUPER_ADMIN:
-        return 'text-yellow-600 bg-yellow-50';
+        return 'text-gray-600 bg-black-50';
       case UserRole.ADMIN:
         return 'text-blue-600 bg-blue-50';
       case UserRole.PASSENGER:
         return 'text-gray-600 bg-gray-50';
       default:
         return 'text-gray-600 bg-gray-50';
+    }
+  };
+
+  const getBorderColor = (role: UserRole) => {
+    switch (role) {
+      case UserRole.SUPER_ADMIN:
+        return 'border-gray-700';
+      case UserRole.ADMIN:
+        return 'border-blue-600';
+      case UserRole.PASSENGER:
+        return 'border-gray-600';
+      default:
+        return 'border-gray-600';
     }
   };
 
@@ -129,25 +142,8 @@ export default function AdminLayout({
       )}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="flex-1 flex justify-center">
-                <img src="/globaltek-logo.png" alt="GlobalTek Logo" className="h-25 object-contain" />
-              </div>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            {userInfo && (
-              <div className="mt-4 flex justify-center">
-                <div className={`inline-block px-4 py-2 rounded-lg font-medium text-sm ${getRoleColor(userInfo.role)} cursor-default`}>
-                  {formatRole(userInfo.role)}
-                </div>
-              </div>
-            )}
+          <div className="p-6 border-b border-gray-200 flex justify-center">
+            <img src="/globaltek-logo.png" alt="GlobalTek Logo" className="h-25 object-contain" />
           </div>
           
           {/* Navigation */}
@@ -200,11 +196,6 @@ export default function AdminLayout({
             </button>
             <div className="flex items-center space-x-3">
               <h1 className="text-lg font-semibold text-gray-900">MRT System</h1>
-              {userInfo && (
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(userInfo.role)}`}>
-                  {formatRole(userInfo.role)}
-                </span>
-              )}
             </div>
             <div className="w-8" /> {/* Spacer */}
           </div>
