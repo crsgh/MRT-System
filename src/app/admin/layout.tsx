@@ -140,11 +140,10 @@ export default function AdminLayout({
               </button>
             </div>
             {userInfo && (
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <p className="text-sm font-medium text-gray-900 mb-2">{userInfo.username}</p>
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getRoleColor(userInfo.role)}`}>
+              <div className="mt-4">
+                <div className={`inline-block px-4 py-2 rounded-lg font-medium text-sm ${getRoleColor(userInfo.role)} cursor-default`}>
                   {formatRole(userInfo.role)}
-                </span>
+                </div>
               </div>
             )}
           </div>
