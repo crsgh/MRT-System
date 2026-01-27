@@ -129,24 +129,24 @@ export default function AdminLayout({
       )}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <div>
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-gray-900">MRT System</h1>
-              {userInfo && (
-                <div className="mt-2">
-                  <p className="text-sm font-medium text-gray-700">{userInfo.username}</p>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getRoleColor(userInfo.role)}`}>
-                    {formatRole(userInfo.role)}
-                  </span>
-                </div>
-              )}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100"
-            >
-              <X size={20} />
-            </button>
+            {userInfo && (
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <p className="text-sm font-medium text-gray-900 mb-2">{userInfo.username}</p>
+                <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getRoleColor(userInfo.role)}`}>
+                  {formatRole(userInfo.role)}
+                </span>
+              </div>
+            )}
           </div>
           
           {/* Navigation */}
